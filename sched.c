@@ -222,10 +222,14 @@ void ctx_switch_from_irq()
                 //3 Restauration contexte
                 //----et on recharge le SP
                 __asm("mov sp, %0" : : "r"(current_process->currentSP));
+                
+                set_tick_and_enable_timer();
+                
                 //----on charge LR pour le retour
-                __asm("mov lr, %0" : : "r"(current_process->currentPC));
+                //__asm("mov lr, %0" : : "r"(current_process->currentPC));
                 //----on restaure les registres
                 __asm("pop {r0-r12}");
+                ENABLE_IRQ();
                 
                 __asm("rfeia sp!");
                 
