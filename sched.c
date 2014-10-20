@@ -200,6 +200,8 @@ void ctx_switch_from_irq()
                 current_process->ps_state = RUNNING;
                 start_current_process();
                 current_process->ps_state = TERMINATED;
+                set_tick_and_enable_timer();
+                ENABLE_IRQ();
                 break;
                 
             case TERMINATED:
