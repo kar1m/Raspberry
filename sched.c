@@ -203,6 +203,11 @@ void ctx_switch_from_irq()
         {
             case CREATED:
                 current_process->ps_state = RUNNING;
+                
+                //----on active les interruptions
+                set_tick_and_enable_timer();
+                ENABLE_IRQ();
+                
                 start_current_process();
                 current_process->ps_state = TERMINATED;
                 break;
@@ -222,6 +227,8 @@ void ctx_switch_from_irq()
                 //----on restaure les registres
                 __asm("pop {r0-r12}");
                 
+                __asm("rfeia sp!");
+                
                 continue_elect = 0;
                 break;
                 
@@ -229,10 +236,7 @@ void ctx_switch_from_irq()
                 continue_elect = 1;
                 break;
         }
-        //----on active les interruptions
-        set_tick_and_enable_timer();
-        ENABLE_IRQ();
-        
+
     }
     
     __asm("rfeia sp!");
